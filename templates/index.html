@@ -156,6 +156,13 @@
                 flex: 0 0 auto;
             }
         }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -163,7 +170,7 @@
     <div class="container">
         <!-- Profile photo -->
         <div class="profile-photo">
-            <img src="1.png" alt="Prashant Photo">
+            <img src="{{ url_for('static', filename='images/1.jpg') }}" alt="Arpit Photo" class="profile-img">
         </div>
 
         <!-- Content -->
@@ -175,17 +182,18 @@
 
             <div class="about">
                 <h2>About Me</h2>
-                <p>Hi, I'm <b>Prashant</b> 👋, a student and aspiring Cloud & DevOps engineer.</p>
+                <p>Hi, I'm <b>Arpit</b> 👋, a student and aspiring Cloud & DevOps engineer.</p>
                 <p style="margin-top:10px;">
-                    <b>Project:</b> I have deployed a 2-tier Flask application (Flask + MySQL) on AWS EC2 using Docker.  
-                    I used Docker Compose to manage both containers with volumes and a custom network.  
-                    The source code is hosted on GitHub, and Jenkins is integrated to set up a CI/CD pipeline for automated deployment.
+                    <b>Project:</b> I have deployed a 2-tier Flask application (Flask + MySQL) on AWS EC2 using Docker.
+                    I used Docker Compose to manage both containers with volumes and a custom network.
+                    The source code is hosted on GitHub, and Jenkins is integrated to set up a CI/CD pipeline for
+                    automated deployment.
                 </p>
             </div>
 
             <div class="messages">
                 {% for message in messages %}
-                    <p>{{ message[0] }}</p>
+                <p>{{ message[0] }}</p>
                 {% endfor %}
             </div>
 
@@ -198,8 +206,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#messageForm").on("submit", function(event) {
+        $(document).ready(function () {
+            $("#messageForm").on("submit", function (event) {
                 event.preventDefault();
                 let messageInput = $("input[name='new_message']");
                 let message = messageInput.val().trim();
@@ -213,13 +221,13 @@
                     url: "/submit",
                     type: "POST",
                     data: { new_message: message },
-                    success: function(response) {
+                    success: function (response) {
                         if (response && response.message) {
                             $(".messages").append("<p>" + response.message + "</p>");
                             messageInput.val("");
                         }
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error("AJAX Error:", status, error);
                     }
                 });
@@ -227,4 +235,5 @@
         });
     </script>
 </body>
+
 </html>
