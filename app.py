@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
 from mysql.connector import Error
+import time
 
 app = Flask(__name__)
 
@@ -18,7 +19,6 @@ def get_db_connection():
         password=MYSQL_PASSWORD,
         database=MYSQL_DB
     )
-import time
 
 def init_db():
     retries = 10
@@ -74,6 +74,10 @@ def submit():
         return jsonify({"message": new_message})
     except Error as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"}), 200
 
 if __name__ == "__main__":
     init_db()
