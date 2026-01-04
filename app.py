@@ -18,22 +18,32 @@ def get_db_connection():
         password=MYSQL_PASSWORD,
         database=MYSQL_DB
     )
+import time
 
 def init_db():
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS messages (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                message TEXT
-            )
-        """)
-        conn.commit()
-        cursor.close()
-        conn.close()
-    except Error as e:
-        print("Database init error:", e)
+    retries = 10
+    while retries > 0:
+        try:
+            print("⏳ Trying to connect to MySQL...")
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS messages (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    message TEXT
+                )
+            """)
+            conn.commit()
+            cursor.close()
+            conn.close()
+            print("✅ MySQL connected & table ready")
+            return
+        except Error as e:
+            print(f"❌ MySQL not ready yet: {e}")
+            retries -= 1
+            time.sleep(5)
+
+    raise Exception("❌ Could not connect to MySQL after retries")
 
 @app.route("/")
 def hello():
